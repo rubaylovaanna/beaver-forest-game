@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Бобёр в лесу - учим звук Р</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Ubuntu', sans-serif;
+            overflow: hidden;
+            touch-action: manipulation;
+            background: #87CEEB;
+            height: 100vh;
+            width: 100vw;
+            position: fixed;
+        }
+
+        /* Предупреждение о портретной ориентации */
+        .portrait-warning {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #FF7043 0%, #E64A19 100%);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .portrait-warning.active {
+            display: flex;
+        }
+
+        .portrait-warning-icon {
+            font-size: clamp(60px, 15vw, 80px);
+            margin-bottom: 30px;
+            animation: rotatePhone 2s ease-in-out infinite;
+        }
+
+        @keyframes rotatePhone {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(90deg); }
+        }
+
+        .portrait-warning h2 {
+            font-size: clamp(22px, 5vw, 28px);
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .portrait-warning p {
+            font-size: clamp(16px, 3.5vw, 20px);
+            max-width: 400px;
+            line-height: 1.5;
+        }
+
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #forest-scene {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background-image: url('images/png/background-forest.png');
+            background-size: cover;
+            background-position: center bottom;
+            background-repeat: no-repeat;
+            background-color: #7CB342;
+        }
+
+        .beaver {
+            position: absolute;
+            bottom: 1%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 18vw;
+            max-width: 280px;
+            min-width: 120px;
+            z-index: 5;
+            animation: beaverBounce 2.5s ease-in-out infinite;
+        }
+
+        .beaver img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        @keyframes beaverBounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        .interactive-spot {
+            position: absolute;
+            cursor: pointer;
+            z-index: 10;
+            transform-origin: center center;
+        }
+
+        .interactive-spot:hover {
+            animation: spotPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes spotPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.12); }
+            100% { transform: scale(1); }
+        }
+
+        .interactive-spot.centered:hover {
+            animation: spotPulseCentered 1s ease-in-out infinite;
+        }
+
+        @keyframes spotPulseCentered {
+            0% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.12); }
+            100% { transform: translateX(-50%) scale(1); }
+        }
+
+        .interactive-spot.collected {
+            opacity: 0;
+            pointer-events: none;
+            animation: none !important;
+        }
+
+        .interactive-spot img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: opacity 0.5s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .spot-glow {
+            position: absolute;
+            top: -20%;
+            left: -20%;
+            width: 140%;
+            height: 140%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 235, 59, 0.6) 0%, rgba(255, 235, 59, 0) 70%);
+            animation: glowPulse 2s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.15); }
+        }
+
+        /* Плашка стиха — сверху по центру */
+        .poem-banner {
+            display: none;
+            position: fixed;
+            top: 2%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #FFF9C4 0%, #FFE082 100%);
+            border: 4px solid #8D6E63;
+            border-radius: 25px;
+            padding: clamp(10px, 2vw, 20px) clamp(15px, 3vw, 30px);
+            max-width: 75vw;
+            max-height: 40vh;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            animation: bannerSlideDown 0.5s ease;
+            overflow-y: auto;
+        }
+
+        .poem-banner.active { display: block; }
+
+        @keyframes bannerSlideDown {
+            0% { transform: translateX(-50%) translateY(-100px); opacity: 0; }
+            100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+
+        .poem-title {
+            font-size: clamp(14px, 2.8vw, 22px);
+            color: #5D4037;
+            margin-bottom: 8px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .poem-text {
+            font-size: clamp(12px, 2.2vw, 18px);
+            color: #4E342E;
+            line-height: 1.5;
+            white-space: pre-line;
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        .poem-close {
+            margin-top: 12px;
+            background: linear-gradient(135deg, #66BB6A 0%, #43A047 100%);
+            color: white;
+            border: none;
+            padding: clamp(8px, 1.5vw, 12px) clamp(20px, 4vw, 35px);
+            font-size: clamp(13px, 2.2vw, 17px);
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Ubuntu', sans-serif;
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s;
+            min-width: 120px;
+            min-height: 44px;
+        }
+
+        .poem-close:hover { transform: scale(1.05); }
+        .poem-close:active { transform: scale(0.95); }
+
+        .counter {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: clamp(6px, 1.2vw, 10px) clamp(12px, 2vw, 20px);
+            border-radius: 25px;
+            font-size: clamp(11px, 2vw, 16px);
+            font-weight: 700;
+            color: #5D4037;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            border: 2px solid #8D6E63;
+        }
+
+        .next-button {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #FF7043 0%, #E64A19 100%);
+            color: white;
+            border: none;
+            padding: clamp(12px, 2vw, 18px) clamp(30px, 5vw, 50px);
+            font-size: clamp(14px, 2.8vw, 22px);
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: 'Ubuntu', sans-serif;
+            font-weight: 700;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            z-index: 500;
+            animation: buttonPulse 1.5s ease-in-out infinite;
+            min-width: 150px;
+            min-height: 48px;
+        }
+
+        .next-button.active { display: block; }
+
+        @keyframes buttonPulse {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.05); }
+        }
+
+        .start-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .start-screen.hidden { display: none; }
+
+        .start-content {
+            background: linear-gradient(135deg, #FFF9C4 0%, #FFE082 100%);
+            border: 5px solid #8D6E63;
+            border-radius: 30px;
+            padding: clamp(15px, 3vw, 30px);
+            max-width: 90vw;
+            max-height: 85vh;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+            animation: modalPop 0.5s ease;
+            overflow-y: auto;
+        }
+
+        @keyframes modalPop {
+            from { transform: scale(0.7); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .start-title {
+            font-size: clamp(18px, 4vw, 30px);
+            color: #5D4037;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.5);
+            font-weight: 700;
+        }
+
+        .start-beaver {
+            width: clamp(80px, 15vw, 150px);
+            height: clamp(80px, 15vw, 150px);
+            margin: 0 auto 15px;
+        }
+
+        .start-beaver img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .start-instruction {
+            font-size: clamp(12px, 2vw, 18px);
+            color: #4E342E;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            text-align: left;
+            padding: 0 5px;
+            font-weight: 400;
+        }
+
+        .start-instruction b {
+            color: #D84315;
+            font-weight: 700;
+        }
+
+        .start-button {
+            background: linear-gradient(135deg, #66BB6A 0%, #43A047 100%);
+            color: white;
+            border: none;
+            padding: clamp(12px, 2.5vw, 18px) clamp(30px, 6vw, 60px);
+            font-size: clamp(14px, 2.8vw, 22px);
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: 'Ubuntu', sans-serif;
+            font-weight: 700;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+            transition: transform 0.2s;
+            min-width: 150px;
+            min-height: 48px;
+        }
+
+        .start-button:hover { transform: scale(1.05); }
+        .start-button:active { transform: scale(0.95); }
+
+        .final-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #A5D6A7 0%, #66BB6A 50%, #43A047 100%);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .final-screen.active {
+            display: flex;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .final-title {
+            font-size: clamp(18px, 4vw, 34px);
+            color: white;
+            text-align: center;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .final-scene {
+            position: relative;
+            width: clamp(150px, 25vw, 300px);
+            height: clamp(150px, 25vw, 300px);
+            margin: 15px auto;
+        }
+
+        .final-scene img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            animation: basketBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes basketBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .final-poem {
+            background: rgba(255, 255, 255, 0.95);
+            border: 4px solid #8D6E63;
+            border-radius: 25px;
+            padding: clamp(12px, 2.5vw, 25px);
+            max-width: 85vw;
+            max-height: 25vh;
+            margin-top: 15px;
+            font-size: clamp(12px, 2.2vw, 18px);
+            color: #4E342E;
+            line-height: 1.5;
+            text-align: center;
+            font-style: italic;
+            white-space: pre-line;
+            font-weight: 400;
+            overflow-y: auto;
+        }
+
+        .restart-button {
+            margin-top: 20px;
+            background: linear-gradient(135deg, #FF7043 0%, #E64A19 100%);
+            color: white;
+            border: none;
+            padding: clamp(10px, 2vw, 15px) clamp(25px, 5vw, 45px);
+            font-size: clamp(13px, 2.5vw, 18px);
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Ubuntu', sans-serif;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+            min-width: 150px;
+            min-height: 48px;
+        }
+
+        /* ЛАНДШАФТНАЯ ОРИЕНТАЦИЯ */
+        @media (orientation: landscape) {
+            body {
+                overflow: hidden;
+            }
+            
+            #forest-scene {
+                overflow: hidden;
+            }
+        }
+
+        /* ПОРТРЕТНАЯ ОРИЕНТАЦИЯ */
+        @media (orientation: portrait) {
+            .portrait-warning {
+                display: flex;
+            }
+            
+            #game-container {
+                display: none;
+            }
+        }
+
+        /* ОЧЕНЬ МАЛЕНЬКИЕ ЭКРАНЫ (меньше 500px по высоте) */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .beaver {
+                width: 15vw;
+                min-width: 100px;
+                bottom: 0%;
+            }
+            
+            .poem-banner {
+                top: 1%;
+                max-height: 35vh;
+                padding: 8px 12px;
+            }
+            
+            .poem-title {
+                font-size: clamp(12px, 2.5vw, 18px);
+                margin-bottom: 5px;
+            }
+            
+            .poem-text {
+                font-size: clamp(10px, 2vw, 15px);
+                line-height: 1.4;
+            }
+            
+            .poem-close {
+                margin-top: 8px;
+                padding: 6px 18px;
+                font-size: clamp(11px, 2vw, 14px);
+                min-width: 100px;
+                min-height: 38px;
+            }
+            
+            .counter {
+                top: 5px;
+                left: 5px;
+                padding: 4px 10px;
+                font-size: clamp(10px, 1.8vw, 13px);
+            }
+            
+            .next-button {
+                bottom: 10px;
+                padding: 10px 25px;
+                font-size: clamp(12px, 2.5vw, 16px);
+                min-width: 130px;
+                min-height: 42px;
+            }
+            
+            .start-content {
+                max-height: 90vh;
+                padding: 12px 15px;
+            }
+            
+            .start-title {
+                font-size: clamp(16px, 3.5vw, 24px);
+                margin-bottom: 10px;
+            }
+            
+            .start-instruction {
+                font-size: clamp(11px, 1.8vw, 15px);
+                margin-bottom: 15px;
+            }
+            
+            .start-button {
+                padding: 10px 25px;
+                font-size: clamp(13px, 2.5vw, 18px);
+                min-width: 130px;
+                min-height: 42px;
+            }
+            
+            .final-title {
+                font-size: clamp(16px, 3.5vw, 26px);
+                margin-bottom: 10px;
+            }
+            
+            .final-scene {
+                width: clamp(120px, 20vw, 200px);
+                height: clamp(120px, 20vw, 200px);
+                margin: 10px auto;
+            }
+            
+            .final-poem {
+                font-size: clamp(11px, 2vw, 15px);
+                padding: 10px 15px;
+                max-height: 20vh;
+                margin-top: 10px;
+            }
+            
+            .restart-button {
+                padding: 8px 20px;
+                font-size: clamp(12px, 2.2vw, 16px);
+                margin-top: 15px;
+                min-width: 130px;
+                min-height: 42px;
+            }
+        }
+
+        /* МАЛЕНЬКИЕ ЭКРАНЫ (меньше 600px по ширине) */
+        @media (max-width: 600px) and (orientation: landscape) {
+            .counter {
+                font-size: clamp(10px, 1.8vw, 12px);
+                padding: 4px 8px;
+            }
+            
+            .poem-banner {
+                max-width: 85vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="portrait-warning" id="portrait-warning">
+        <div class="portrait-warning-icon">📱</div>
+        <h2>Поверните устройство</h2>
+        <p>Для корректной игры расположите экран <b>горизонтально</b> (ландшафтная ориентация)</p>
+    </div>
+
+    <audio id="bg-music" loop preload="auto">
+        <source src="sounds/background.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="click-sound" preload="auto">
+        <source src="sounds/click.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="success-sound" preload="auto">
+        <source src="sounds/success.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="start-screen" id="start-screen">
+        <div class="start-content">
+            <div class="start-title">🌲 Бобёр в лесу 🌲</div>
+            <div class="start-beaver">
+                <img src="images/png/ui/beaver-start.png" alt="Бобёр">
+            </div>
+            <div class="start-instruction">
+                Привет, дружок! 👋<br><br>
+                Меня зовут <b>Бобёр</b>. Я отправился в осенний лес собирать дары природы!<br><br>
+                🌲 В лесу есть <b>5 волшебных мест</b> — они <b>мерцают золотым светом</b>.<br><br>
+                👆 Нажимай на них по очереди — и ты увидишь, что там спряталось, и услышишь <b>стихи со звуком [Р]</b>!<br><br>
+                Когда соберёшь все дары — мы посмотрим, что получилось! 🧺
+            </div>
+            <button class="start-button" onclick="startGame()"> Начать! 🌟</button>
+        </div>
+    </div>
+
+    <div id="game-container">
+        <div id="forest-scene">
+            <div class="counter"> Собрано: <span id="count">0</span>/5</div>
+
+            <div id="spot-spruce" class="interactive-spot" onclick="collectItem('spruce')">
+                <div class="spot-glow"></div>
+                <img src="" alt="Дар леса" class="spot-image">
+            </div>
+
+            <div id="spot-cedar" class="interactive-spot" onclick="collectItem('cedar')">
+                <div class="spot-glow"></div>
+                <img src="" alt="Дар леса" class="spot-image">
+            </div>
+
+            <div id="spot-leaf" class="interactive-spot centered" onclick="collectItem('leaf')">
+                <div class="spot-glow"></div>
+                <img src="" alt="Дар леса" class="spot-image">
+            </div>
+
+            <div id="spot-oily" class="interactive-spot" onclick="collectItem('oily')">
+                <div class="spot-glow"></div>
+                <img src="" alt="Дар леса" class="spot-image">
+            </div>
+
+            <div id="spot-moss" class="interactive-spot" onclick="collectItem('moss')">
+                <div class="spot-glow"></div>
+                <img src="" alt="Дар леса" class="spot-image">
+            </div>
+
+            <div class="beaver">
+                <img src="images/png/ui/beaver-main.png" alt="Бобёр">
+            </div>
+        </div>
+    </div>
+
+    <div class="poem-banner" id="poem-banner">
+        <div class="poem-title" id="poem-title"></div>
+        <div class="poem-text" id="poem-text"></div>
+        <button class="poem-close" onclick="closePoem()">Понятно! 👍</button>
+    </div>
+
+    <button class="next-button" id="next-button" onclick="showFinalScreen()">Далее →</button>
+
+    <div class="final-screen" id="final-screen">
+        <div class="final-title">🎉 Ура! Бобёр собрал дары леса! 🎉</div>
+        <div class="final-scene">
+            <img src="images/png/ui/beaver-with-basket.png" alt="Бобёр с корзиной">
+        </div>
+        <div class="final-poem">Свои осенние подарки
+Раскрасил лес окраской яркой,
+Готов со всеми он делиться
+Тем, что в земле его родится</div>
+        <button class="restart-button" onclick="restartGame()">🔄 Играть снова</button>
+    </div>
+
+    <script>
+        let collectedItems = [];
+        const totalItems = 5;
+
+        const bgMusic = document.getElementById('bg-music');
+        const clickSound = document.getElementById('click-sound');
+        const successSound = document.getElementById('success-sound');
+
+        bgMusic.volume = 0.3;
+        clickSound.volume = 0.5;
+        successSound.volume = 0.7;
+
+        const itemsData = {
+            spruce: {
+                title: ' Боровик под ёлкой',
+                poem: `Осенний лес такой прекрасный,
+Наряд примерил желто-красный,
+Под елью, о счастливый миг!
+Растёт красавец-боровик`,
+                initialImage: 'images/png/interactive/spruce-tree.png',
+                newImage: 'images/png/collected/boletus-mushroom.png'
+            },
+            cedar: {
+                title: ' Кедровая шишка',
+                poem: `Где-то в Сибири в тайге над рекой 
+Вырос могучий кедр вековой 
+Щедро орехами делится он 
+С рыжею белкой и с бурундуком`,
+                initialImage: 'images/png/interactive/cedar-tree.png',
+                newImage: 'images/png/collected/cedar-cone.png'
+            },
+            leaf: {
+                title: '🍄 Мухомор',
+                poem: `Вот мухомор стоит отважно,
+Как генерал в мундире важный,
+Он не боится грибников,
+Под ноги всем попасть готов`,
+                initialImage: 'images/png/interactive/maple-leaf.png',
+                newImage: 'images/png/collected/fly-agaric.png'
+            },
+            oily: {
+                title: '🐛 Червячок',
+                poem: `А вот маслята дружной стайкой
+В аренду взяли всю полянку,
+Но червячки с утра успели,
+На завтрак ножки им подъели`,
+                initialImage: 'images/png/interactive/oily-mushrooms.png',
+                newImage: 'images/png/collected/worm.png'
+            },
+            moss: {
+                title: ' Брусника',
+                poem: `На кочках с краю у болот
+Брусника просится к вам в рот,
+А на болоте клюква спеет,
+Под солнцем не спеша краснеет`,
+                initialImage: 'images/png/interactive/moss-tuft.png',
+                newImage: 'images/png/collected/lingonberry-bush.png'
+            }
+        };
+
+        function getPositions() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            
+            if (height <= 500) {
+                return [
+                    { top: '15%', left: '3%', width: '12%', height: '18%' },
+                    { top: '12%', right: '3%', width: '13%', height: '18%' },
+                    { top: '35%', left: '40%', width: '10%', height: '13%', centered: true },
+                    { bottom: '18%', left: '5%', width: '12%', height: '15%' },
+                    { bottom: '15%', right: '5%', width: '12%', height: '13%' }
+                ];
+            }
+            
+            if (width <= 800) {
+                return [
+                    { top: '20%', left: '4%', width: '14%', height: '20%' },
+                    { top: '18%', right: '4%', width: '15%', height: '20%' },
+                    { top: '40%', left: '40%', width: '11%', height: '15%', centered: true },
+                    { bottom: '20%', left: '6%', width: '14%', height: '17%' },
+                    { bottom: '18%', right: '6%', width: '14%', height: '15%' }
+                ];
+            }
+            
+            return [
+                { top: '25%', left: '5%', width: '12%', height: '22%' },
+                { top: '20%', right: '5%', width: '13%', height: '22%' },
+                { top: '42%', left: '40%', width: '10%', height: '15%', centered: true },
+                { bottom: '22%', left: '7%', width: '12%', height: '17%' },
+                { bottom: '20%', right: '7%', width: '12%', height: '15%' }
+            ];
+        }
+
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function applyPositions() {
+            const spotIds = ['spot-spruce', 'spot-cedar', 'spot-leaf', 'spot-oily', 'spot-moss'];
+            const positions = shuffleArray(getPositions());
+
+            spotIds.forEach((id, index) => {
+                const element = document.getElementById(id);
+                const pos = positions[index];
+
+                element.style.top = '';
+                element.style.bottom = '';
+                element.style.left = '';
+                element.style.right = '';
+                element.style.width = '';
+                element.style.height = '';
+                element.style.transform = '';
+                element.classList.remove('centered');
+
+                if (pos.top !== undefined) element.style.top = pos.top;
+                if (pos.bottom !== undefined) element.style.bottom = pos.bottom;
+                if (pos.left !== undefined) element.style.left = pos.left;
+                if (pos.right !== undefined) element.style.right = pos.right;
+                element.style.width = pos.width;
+                element.style.height = pos.height;
+                
+                if (pos.centered) {
+                    element.classList.add('centered');
+                    element.style.transform = 'translateX(-50%)';
+                }
+            });
+        }
+
+        function setInitialImages() {
+            const spotIds = ['spot-spruce', 'spot-cedar', 'spot-leaf', 'spot-oily', 'spot-moss'];
+            const itemKeys = ['spruce', 'cedar', 'leaf', 'oily', 'moss'];
+
+            spotIds.forEach((id, index) => {
+                const element = document.getElementById(id);
+                const imgElement = element.querySelector('.spot-image');
+                imgElement.src = itemsData[itemKeys[index]].initialImage;
+            });
+        }
+
+        function initGame() {
+            applyPositions();
+            setInitialImages();
+        }
+
+        function startGame() {
+            document.getElementById('start-screen').classList.add('hidden');
+            bgMusic.play().catch(error => {
+                console.log('Автовоспроизведение заблокировано браузером.');
+            });
+        }
+
+        function playClickSound() {
+            clickSound.currentTime = 0;
+            clickSound.play().catch(error => console.log('Звук не воспроизведён:', error));
+        }
+
+        function playSuccessSound() {
+            successSound.currentTime = 0;
+            successSound.play().catch(error => console.log('Звук не воспроизведён:', error));
+        }
+
+        function collectItem(itemType) {
+            if (collectedItems.includes(itemType)) return;
+
+            playClickSound();
+
+            const spot = document.getElementById('spot-' + itemType);
+            const data = itemsData[itemType];
+
+            const imgElement = spot.querySelector('.spot-image');
+            imgElement.style.opacity = '0';
+            
+            setTimeout(() => {
+                imgElement.src = data.newImage;
+                imgElement.alt = data.title;
+                
+                setTimeout(() => {
+                    imgElement.style.opacity = '1';
+                }, 50);
+            }, 300);
+
+            collectedItems.push(itemType);
+            document.getElementById('count').textContent = collectedItems.length;
+
+            if (collectedItems.length === totalItems) {
+                setTimeout(() => {
+                    document.getElementById('next-button').classList.add('active');
+                }, 2000);
+            }
+
+            setTimeout(() => {
+                showPoem(data.title, data.poem);
+            }, 800);
+        }
+
+        function showPoem(title, text) {
+            const banner = document.getElementById('poem-banner');
+            document.getElementById('poem-title').textContent = title;
+            document.getElementById('poem-text').textContent = text;
+            banner.classList.add('active');
+        }
+
+        function closePoem() {
+            document.getElementById('poem-banner').classList.remove('active');
+        }
+
+        function showFinalScreen() {
+            playSuccessSound();
+            document.getElementById('final-screen').classList.add('active');
+        }
+
+        function restartGame() {
+            collectedItems = [];
+            document.getElementById('count').textContent = '0';
+            document.getElementById('next-button').classList.remove('active');
+            document.getElementById('final-screen').classList.remove('active');
+            
+            const spotIds = ['spot-spruce', 'spot-cedar', 'spot-leaf', 'spot-oily', 'spot-moss'];
+            spotIds.forEach(id => {
+                const element = document.getElementById(id);
+                element.classList.remove('collected');
+                element.style.opacity = '1';
+            });
+
+            initGame();
+        }
+
+        document.getElementById('poem-banner').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePoem();
+            }
+        });
+
+        function checkOrientation() {
+            const warning = document.getElementById('portrait-warning');
+            const gameContainer = document.getElementById('game-container');
+            
+            if (window.innerHeight > window.innerWidth) {
+                warning.classList.add('active');
+                gameContainer.style.display = 'none';
+            } else {
+                warning.classList.remove('active');
+                gameContainer.style.display = 'block';
+            }
+        }
+
+        window.addEventListener('load', checkOrientation);
+        window.addEventListener('resize', function() {
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(() => {
+                checkOrientation();
+                if (window.innerHeight <= window.innerWidth) {
+                    applyPositions();
+                }
+            }, 250);
+        });
+        window.addEventListener('orientationchange', function() {
+            setTimeout(checkOrientation, 300);
+            setTimeout(() => {
+                if (window.innerHeight <= window.innerWidth) {
+                    applyPositions();
+                }
+            }, 500);
+        });
+
+        bgMusic.addEventListener('error', function() {
+            console.log('Фоновая музыка не загрузилась.');
+        });
+        clickSound.addEventListener('error', function() {
+            console.log('Звук клика не загрузился.');
+        });
+        successSound.addEventListener('error', function() {
+            console.log('Звук победы не загрузился.');
+        });
+
+        checkOrientation();
+        if (window.innerHeight <= window.innerWidth) {
+            initGame();
+        }
+    </script>
+</body>
+</html>
