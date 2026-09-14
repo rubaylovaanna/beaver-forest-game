@@ -17,7 +17,7 @@
 
         body {
             font-family: 'Ubuntu', sans-serif;
-            overflow: hidden;
+            overflow: hidden; /* Строго без скролла */
             touch-action: manipulation;
             background: #87CEEB;
             height: 100vh;
@@ -43,13 +43,11 @@
             color: white;
         }
 
-        .portrait-warning.active {
-            display: flex;
-        }
+        .portrait-warning.active { display: flex; }
 
         .portrait-warning-icon {
             font-size: clamp(60px, 15vw, 80px);
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             animation: rotatePhone 2s ease-in-out infinite;
         }
 
@@ -59,15 +57,15 @@
         }
 
         .portrait-warning h2 {
-            font-size: clamp(22px, 5vw, 28px);
-            margin-bottom: 20px;
+            font-size: clamp(20px, 5vw, 28px);
+            margin-bottom: 15px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .portrait-warning p {
-            font-size: clamp(16px, 3.5vw, 20px);
+            font-size: clamp(14px, 3.5vw, 20px);
             max-width: 400px;
-            line-height: 1.5;
+            line-height: 1.4;
         }
 
         #game-container {
@@ -95,7 +93,7 @@
             transform: translateX(-50%);
             width: 18vw;
             max-width: 280px;
-            min-width: 120px;
+            min-width: 100px;
             z-index: 5;
             animation: beaverBounce 2.5s ease-in-out infinite;
         }
@@ -108,7 +106,7 @@
 
         @keyframes beaverBounce {
             0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(-10px); }
+            50% { transform: translateX(-50%) translateY(-8px); }
         }
 
         .interactive-spot {
@@ -116,26 +114,23 @@
             cursor: pointer;
             z-index: 10;
             transform-origin: center center;
+            /* КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: предотвращает схлопывание картинок на мобильных */
+            min-width: 40px;
+            min-height: 40px;
         }
 
-        .interactive-spot:hover {
-            animation: spotPulse 1s ease-in-out infinite;
-        }
+        .interactive-spot:hover { animation: spotPulse 1s ease-in-out infinite; }
 
         @keyframes spotPulse {
-            0% { transform: scale(1); }
+            0%, 100% { transform: scale(1); }
             50% { transform: scale(1.12); }
-            100% { transform: scale(1); }
         }
 
-        .interactive-spot.centered:hover {
-            animation: spotPulseCentered 1s ease-in-out infinite;
-        }
+        .interactive-spot.centered:hover { animation: spotPulseCentered 1s ease-in-out infinite; }
 
         @keyframes spotPulseCentered {
-            0% { transform: translateX(-50%) scale(1); }
+            0%, 100% { transform: translateX(-50%) scale(1); }
             50% { transform: translateX(-50%) scale(1.12); }
-            100% { transform: translateX(-50%) scale(1); }
         }
 
         .interactive-spot.collected {
@@ -151,6 +146,7 @@
             transition: opacity 0.5s ease;
             position: relative;
             z-index: 2;
+            display: block; /* Гарантирует рендеринг */
         }
 
         .spot-glow {
@@ -171,27 +167,29 @@
             50% { opacity: 1; transform: scale(1.15); }
         }
 
-        /* Плашка стиха — сверху по центру */
+        /* Плашка стиха — строго без скролла */
         .poem-banner {
             display: none;
             position: fixed;
-            top: 2%;
+            top: 3%;
             left: 50%;
             transform: translateX(-50%);
             background: linear-gradient(135deg, #FFF9C4 0%, #FFE082 100%);
             border: 4px solid #8D6E63;
-            border-radius: 25px;
-            padding: clamp(10px, 2vw, 20px) clamp(15px, 3vw, 30px);
-            max-width: 75vw;
-            max-height: 40vh;
+            border-radius: 20px;
+            padding: 1.5vh 3vw;
+            max-width: 80vw;
+            max-height: 45vh; /* Ограничиваем высоту, но убираем скролл */
             text-align: center;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
             z-index: 1000;
             animation: bannerSlideDown 0.5s ease;
-            overflow-y: auto;
+            display: none; /* Переопределяем для flex-центрирования внутри */
+            flex-direction: column;
+            justify-content: center;
         }
 
-        .poem-banner.active { display: block; }
+        .poem-banner.active { display: flex; }
 
         @keyframes bannerSlideDown {
             0% { transform: translateX(-50%) translateY(-100px); opacity: 0; }
@@ -199,37 +197,38 @@
         }
 
         .poem-title {
-            font-size: clamp(14px, 2.8vw, 22px);
+            font-size: clamp(14px, 3vw, 20px);
             color: #5D4037;
-            margin-bottom: 8px;
+            margin-bottom: 1vh;
             font-weight: 700;
-            line-height: 1.3;
+            line-height: 1.2;
         }
 
         .poem-text {
-            font-size: clamp(12px, 2.2vw, 18px);
+            font-size: clamp(12px, 2.5vw, 16px);
             color: #4E342E;
-            line-height: 1.5;
+            line-height: 1.35; /* Плотнее для 4 строк */
             white-space: pre-line;
             font-style: italic;
             font-weight: 400;
         }
 
         .poem-close {
-            margin-top: 12px;
+            margin-top: 1.5vh;
             background: linear-gradient(135deg, #66BB6A 0%, #43A047 100%);
             color: white;
             border: none;
-            padding: clamp(8px, 1.5vw, 12px) clamp(20px, 4vw, 35px);
-            font-size: clamp(13px, 2.2vw, 17px);
-            border-radius: 25px;
+            padding: 1vh 3vw;
+            font-size: clamp(12px, 2.5vw, 16px);
+            border-radius: 20px;
             cursor: pointer;
             font-family: 'Ubuntu', sans-serif;
             font-weight: 700;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             transition: transform 0.2s;
-            min-width: 120px;
-            min-height: 44px;
+            min-width: 100px;
+            min-height: 40px;
+            align-self: center;
         }
 
         .poem-close:hover { transform: scale(1.05); }
@@ -240,9 +239,9 @@
             top: 10px;
             left: 10px;
             background: rgba(255, 255, 255, 0.95);
-            padding: clamp(6px, 1.2vw, 10px) clamp(12px, 2vw, 20px);
-            border-radius: 25px;
-            font-size: clamp(11px, 2vw, 16px);
+            padding: 0.8vh 1.5vw;
+            border-radius: 20px;
+            font-size: clamp(11px, 2vw, 15px);
             font-weight: 700;
             color: #5D4037;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -253,23 +252,23 @@
         .next-button {
             display: none;
             position: fixed;
-            bottom: 20px;
+            bottom: 15px;
             left: 50%;
             transform: translateX(-50%);
             background: linear-gradient(135deg, #FF7043 0%, #E64A19 100%);
             color: white;
             border: none;
-            padding: clamp(12px, 2vw, 18px) clamp(30px, 5vw, 50px);
-            font-size: clamp(14px, 2.8vw, 22px);
-            border-radius: 30px;
+            padding: 1.5vh 4vw;
+            font-size: clamp(14px, 3vw, 20px);
+            border-radius: 25px;
             cursor: pointer;
             font-family: 'Ubuntu', sans-serif;
             font-weight: 700;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
             z-index: 500;
             animation: buttonPulse 1.5s ease-in-out infinite;
-            min-width: 150px;
-            min-height: 48px;
+            min-width: 140px;
+            min-height: 44px;
         }
 
         .next-button.active { display: block; }
@@ -279,6 +278,7 @@
             50% { transform: translateX(-50%) scale(1.05); }
         }
 
+        /* Стартовый экран — строго без скролла */
         .start-screen {
             position: fixed;
             top: 0;
@@ -290,42 +290,45 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 2vh 2vw;
         }
 
         .start-screen.hidden { display: none; }
 
         .start-content {
             background: linear-gradient(135deg, #FFF9C4 0%, #FFE082 100%);
-            border: 5px solid #8D6E63;
-            border-radius: 30px;
-            padding: clamp(15px, 3vw, 30px);
+            border: 4px solid #8D6E63;
+            border-radius: 25px;
+            padding: 2vh 3vw;
             max-width: 90vw;
-            max-height: 85vh;
+            max-height: 95vh;
             width: 100%;
             text-align: center;
             box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
             animation: modalPop 0.5s ease;
-            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            /* УБРАН overflow-y: auto */
         }
 
         @keyframes modalPop {
-            from { transform: scale(0.7); opacity: 0; }
+            from { transform: scale(0.8); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
         }
 
         .start-title {
-            font-size: clamp(18px, 4vw, 30px);
+            font-size: clamp(18px, 4vh, 28px);
             color: #5D4037;
-            margin-bottom: 15px;
+            margin-bottom: 1vh;
             text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.5);
             font-weight: 700;
         }
 
         .start-beaver {
-            width: clamp(80px, 15vw, 150px);
-            height: clamp(80px, 15vw, 150px);
-            margin: 0 auto 15px;
+            width: clamp(80px, 15vh, 130px);
+            height: clamp(80px, 15vh, 130px);
+            margin: 1vh auto;
         }
 
         .start-beaver img {
@@ -335,12 +338,12 @@
         }
 
         .start-instruction {
-            font-size: clamp(12px, 2vw, 18px);
+            font-size: clamp(12px, 2.2vw, 16px);
             color: #4E342E;
-            line-height: 1.5;
-            margin-bottom: 20px;
+            line-height: 1.4;
+            margin-bottom: 2vh;
             text-align: left;
-            padding: 0 5px;
+            padding: 0 1vw;
             font-weight: 400;
         }
 
@@ -353,21 +356,23 @@
             background: linear-gradient(135deg, #66BB6A 0%, #43A047 100%);
             color: white;
             border: none;
-            padding: clamp(12px, 2.5vw, 18px) clamp(30px, 6vw, 60px);
-            font-size: clamp(14px, 2.8vw, 22px);
-            border-radius: 30px;
+            padding: 1.5vh 4vw;
+            font-size: clamp(14px, 2.8vw, 18px);
+            border-radius: 25px;
             cursor: pointer;
             font-family: 'Ubuntu', sans-serif;
             font-weight: 700;
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
             transition: transform 0.2s;
-            min-width: 150px;
-            min-height: 48px;
+            min-width: 140px;
+            min-height: 44px;
+            align-self: center;
         }
 
         .start-button:hover { transform: scale(1.05); }
         .start-button:active { transform: scale(0.95); }
 
+        /* Финальный экран — строго без скролла, адаптирован */
         .final-screen {
             display: none;
             position: fixed;
@@ -377,10 +382,10 @@
             height: 100%;
             background: linear-gradient(135deg, #A5D6A7 0%, #66BB6A 50%, #43A047 100%);
             z-index: 2000;
-            justify-content: center;
+            justify-content: space-evenly; /* Равномерное распределение по вертикали */
             align-items: center;
             flex-direction: column;
-            padding: 20px;
+            padding: 1vh 2vw;
         }
 
         .final-screen.active {
@@ -394,20 +399,19 @@
         }
 
         .final-title {
-            font-size: clamp(18px, 4vw, 34px);
+            font-size: clamp(16px, 4vh, 28px);
             color: white;
             text-align: center;
-            margin-bottom: 15px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
             font-weight: 700;
-            line-height: 1.3;
+            line-height: 1.2;
         }
 
         .final-scene {
             position: relative;
-            width: clamp(150px, 25vw, 300px);
-            height: clamp(150px, 25vw, 300px);
-            margin: 15px auto;
+            width: clamp(100px, 25vh, 250px);
+            height: clamp(100px, 25vh, 250px);
+            margin: 0 auto;
         }
 
         .final-scene img {
@@ -419,171 +423,73 @@
 
         @keyframes basketBounce {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
+            50% { transform: translateY(-10px); }
         }
 
         .final-poem {
             background: rgba(255, 255, 255, 0.95);
-            border: 4px solid #8D6E63;
-            border-radius: 25px;
-            padding: clamp(12px, 2.5vw, 25px);
-            max-width: 85vw;
-            max-height: 25vh;
-            margin-top: 15px;
-            font-size: clamp(12px, 2.2vw, 18px);
+            border: 3px solid #8D6E63;
+            border-radius: 20px;
+            padding: 1.5vh 3vw;
+            max-width: 90vw;
+            /* УБРАНЫ max-height и overflow-y: auto */
+            font-size: clamp(12px, 3vw, 18px);
             color: #4E342E;
-            line-height: 1.5;
+            line-height: 1.3; /* Плотный интервал для 4 строк */
             text-align: center;
             font-style: italic;
             white-space: pre-line;
             font-weight: 400;
-            overflow-y: auto;
         }
 
         .restart-button {
-            margin-top: 20px;
             background: linear-gradient(135deg, #FF7043 0%, #E64A19 100%);
             color: white;
             border: none;
-            padding: clamp(10px, 2vw, 15px) clamp(25px, 5vw, 45px);
-            font-size: clamp(13px, 2.5vw, 18px);
+            padding: 1.5vh 4vw;
+            font-size: clamp(12px, 2.5vw, 16px);
             border-radius: 25px;
             cursor: pointer;
             font-family: 'Ubuntu', sans-serif;
             font-weight: 700;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
-            min-width: 150px;
-            min-height: 48px;
+            min-width: 140px;
+            min-height: 44px;
         }
 
         /* ЛАНДШАФТНАЯ ОРИЕНТАЦИЯ */
         @media (orientation: landscape) {
-            body {
-                overflow: hidden;
-            }
-            
-            #forest-scene {
-                overflow: hidden;
-            }
+            body, #forest-scene { overflow: hidden; }
         }
 
         /* ПОРТРЕТНАЯ ОРИЕНТАЦИЯ */
         @media (orientation: portrait) {
-            .portrait-warning {
-                display: flex;
-            }
-            
-            #game-container {
-                display: none;
-            }
+            .portrait-warning { display: flex; }
+            #game-container { display: none; }
         }
 
-        /* ОЧЕНЬ МАЛЕНЬКИЕ ЭКРАНЫ (меньше 500px по высоте) */
-        @media (max-height: 500px) and (orientation: landscape) {
-            .beaver {
-                width: 15vw;
-                min-width: 100px;
-                bottom: 0%;
-            }
+        /* ОЧЕНЬ МАЛЕНЬКИЕ ЭКРАНЫ (высота < 400px, типичный мобильный ландшафт) */
+        @media (max-height: 400px) and (orientation: landscape) {
+            .beaver { width: 14vw; min-width: 80px; bottom: 0%; }
             
-            .poem-banner {
-                top: 1%;
-                max-height: 35vh;
-                padding: 8px 12px;
-            }
+            .poem-banner { top: 2%; padding: 1vh 2vw; max-height: 40vh; }
+            .poem-title { font-size: clamp(12px, 2.5vw, 16px); }
+            .poem-text { font-size: clamp(11px, 2vw, 14px); line-height: 1.3; }
+            .poem-close { padding: 0.8vh 2vw; font-size: clamp(11px, 2vw, 14px); min-height: 36px; }
             
-            .poem-title {
-                font-size: clamp(12px, 2.5vw, 18px);
-                margin-bottom: 5px;
-            }
+            .counter { top: 5px; left: 5px; padding: 0.5vh 1vw; font-size: clamp(10px, 1.5vw, 12px); }
+            .next-button { bottom: 10px; padding: 1vh 3vw; font-size: clamp(12px, 2.5vw, 16px); min-height: 38px; }
             
-            .poem-text {
-                font-size: clamp(10px, 2vw, 15px);
-                line-height: 1.4;
-            }
+            .start-content { padding: 1.5vh 2vw; }
+            .start-title { font-size: clamp(16px, 3.5vh, 22px); margin-bottom: 0.5vh; }
+            .start-beaver { width: clamp(70px, 12vh, 100px); height: clamp(70px, 12vh, 100px); margin: 0.5vh auto; }
+            .start-instruction { font-size: clamp(11px, 1.8vw, 14px); line-height: 1.3; margin-bottom: 1.5vh; }
+            .start-button { padding: 1vh 3vw; font-size: clamp(12px, 2.5vw, 16px); min-height: 38px; }
             
-            .poem-close {
-                margin-top: 8px;
-                padding: 6px 18px;
-                font-size: clamp(11px, 2vw, 14px);
-                min-width: 100px;
-                min-height: 38px;
-            }
-            
-            .counter {
-                top: 5px;
-                left: 5px;
-                padding: 4px 10px;
-                font-size: clamp(10px, 1.8vw, 13px);
-            }
-            
-            .next-button {
-                bottom: 10px;
-                padding: 10px 25px;
-                font-size: clamp(12px, 2.5vw, 16px);
-                min-width: 130px;
-                min-height: 42px;
-            }
-            
-            .start-content {
-                max-height: 90vh;
-                padding: 12px 15px;
-            }
-            
-            .start-title {
-                font-size: clamp(16px, 3.5vw, 24px);
-                margin-bottom: 10px;
-            }
-            
-            .start-instruction {
-                font-size: clamp(11px, 1.8vw, 15px);
-                margin-bottom: 15px;
-            }
-            
-            .start-button {
-                padding: 10px 25px;
-                font-size: clamp(13px, 2.5vw, 18px);
-                min-width: 130px;
-                min-height: 42px;
-            }
-            
-            .final-title {
-                font-size: clamp(16px, 3.5vw, 26px);
-                margin-bottom: 10px;
-            }
-            
-            .final-scene {
-                width: clamp(120px, 20vw, 200px);
-                height: clamp(120px, 20vw, 200px);
-                margin: 10px auto;
-            }
-            
-            .final-poem {
-                font-size: clamp(11px, 2vw, 15px);
-                padding: 10px 15px;
-                max-height: 20vh;
-                margin-top: 10px;
-            }
-            
-            .restart-button {
-                padding: 8px 20px;
-                font-size: clamp(12px, 2.2vw, 16px);
-                margin-top: 15px;
-                min-width: 130px;
-                min-height: 42px;
-            }
-        }
-
-        /* МАЛЕНЬКИЕ ЭКРАНЫ (меньше 600px по ширине) */
-        @media (max-width: 600px) and (orientation: landscape) {
-            .counter {
-                font-size: clamp(10px, 1.8vw, 12px);
-                padding: 4px 8px;
-            }
-            
-            .poem-banner {
-                max-width: 85vw;
-            }
+            .final-title { font-size: clamp(14px, 3.5vh, 22px); }
+            .final-scene { width: clamp(90px, 20vh, 180px); height: clamp(90px, 20vh, 180px); }
+            .final-poem { font-size: clamp(11px, 2.5vw, 14px); padding: 1vh 2vw; line-height: 1.25; }
+            .restart-button { padding: 1vh 3vw; font-size: clamp(11px, 2.2vw, 14px); min-height: 38px; }
         }
     </style>
 </head>
@@ -591,7 +497,7 @@
     <div class="portrait-warning" id="portrait-warning">
         <div class="portrait-warning-icon">📱</div>
         <h2>Поверните устройство</h2>
-        <p>Для корректной игры расположите экран <b>горизонтально</b> (ландшафтная ориентация)</p>
+        <p>Для корректной игры расположите экран <b>горизонтально</b></p>
     </div>
 
     <audio id="bg-music" loop preload="auto">
@@ -606,22 +512,22 @@
 
     <div class="start-screen" id="start-screen">
         <div class="start-content">
-            <div class="start-title">Дары леса</div>
+            <div class="start-title">🌲 Дары леса 🌲</div>
             <div class="start-beaver">
                 <img src="images/png/ui/beaver-start.png" alt="Бобёр">
             </div>
             <div class="start-instruction">
                 Привет, друг! Я отправился в осенний лес собирать дары природы!<br><br>
-                В лесу есть <b>5 волшебных мест</b> — найди их, нажими и прочитай стихотворение, чтобы узнать, что там спряталось! Если ты пока не читаешь сам, то повтори за взрослым. Четко произноси звук [Р].<br>
+                В лесу есть <b>5 волшебных мест</b> — найди их, нажми и прочитай стихотворение, чтобы узнать, что там спряталось! Если ты пока не читаешь сам, повтори за взрослым. Четко произноси звук [Р].<br>
                 Все ли предметы полезны? Давай начинать!
             </div>
-            <button class="start-button" onclick="startGame()"> Начать!</button>
+            <button class="start-button" onclick="startGame()">🌟 Начать!</button>
         </div>
     </div>
 
     <div id="game-container">
         <div id="forest-scene">
-            <div class="counter"> Собрано: <span id="count">0</span>/5</div>
+            <div class="counter">🌟 Собрано: <span id="count">0</span>/5</div>
 
             <div id="spot-spruce" class="interactive-spot" onclick="collectItem('spruce')">
                 <div class="spot-glow"></div>
@@ -657,13 +563,13 @@
     <div class="poem-banner" id="poem-banner">
         <div class="poem-title" id="poem-title"></div>
         <div class="poem-text" id="poem-text"></div>
-        <button class="poem-close" onclick="closePoem()">Дальше</button>
+        <button class="poem-close" onclick="closePoem()">Дальше 👍</button>
     </div>
 
     <button class="next-button" id="next-button" onclick="showFinalScreen()">Далее →</button>
 
     <div class="final-screen" id="final-screen">
-        <div class="final-title">Ура! Бобёр собрал дары леса!</div>
+        <div class="final-title">🎉 Ура! Бобёр собрал дары леса! 🎉</div>
         <div class="final-scene">
             <img src="images/png/ui/beaver-with-basket.png" alt="Бобёр с корзиной">
         </div>
@@ -688,7 +594,7 @@
 
         const itemsData = {
             spruce: {
-                title: 'Боровик под ёлкой',
+                title: '🍄 Боровик под ёлкой',
                 poem: `Осенний лес такой прекрасный,
 Наряд примерил желто-красный,
 Под елью, о счастливый миг!
@@ -697,7 +603,7 @@
                 newImage: 'images/png/collected/boletus-mushroom.png'
             },
             cedar: {
-                title: 'Кедровая шишка',
+                title: '🌰 Кедровая шишка',
                 poem: `Где-то в Сибири в тайге над рекой 
 Вырос могучий кедр вековой 
 Щедро орехами делится он 
@@ -706,7 +612,7 @@
                 newImage: 'images/png/collected/cedar-cone.png'
             },
             leaf: {
-                title: 'Мухомор',
+                title: '🍄 Мухомор',
                 poem: `Вот мухомор стоит отважно,
 Как генерал в мундире важный,
 Он не боится грибников,
@@ -715,7 +621,7 @@
                 newImage: 'images/png/collected/fly-agaric.png'
             },
             oily: {
-                title: 'Червячок',
+                title: '🐛 Червячок',
                 poem: `А вот маслята дружной стайкой
 В аренду взяли всю полянку,
 Но червячки с утра успели,
@@ -724,7 +630,7 @@
                 newImage: 'images/png/collected/worm.png'
             },
             moss: {
-                title: 'Брусника',
+                title: '🫐 Брусника',
                 poem: `На кочках с краю у болот
 Брусника просится к вам в рот,
 А на болоте клюква спеет,
@@ -738,32 +644,35 @@
             const width = window.innerWidth;
             const height = window.innerHeight;
             
-            if (height <= 500) {
+            // Для очень маленьких экранов (мобильный ландшафт)
+            if (height <= 400) {
                 return [
-                    { top: '15%', left: '3%', width: '12%', height: '18%' },
-                    { top: '12%', right: '3%', width: '13%', height: '18%' },
-                    { top: '35%', left: '40%', width: '10%', height: '13%', centered: true },
-                    { bottom: '18%', left: '5%', width: '12%', height: '15%' },
-                    { bottom: '15%', right: '5%', width: '12%', height: '13%' }
+                    { top: '12%', left: '2%', width: '14%', height: '20%' },
+                    { top: '10%', right: '2%', width: '15%', height: '20%' },
+                    { top: '30%', left: '40%', width: '12%', height: '16%', centered: true },
+                    { bottom: '15%', left: '4%', width: '14%', height: '18%' },
+                    { bottom: '12%', right: '4%', width: '14%', height: '16%' }
                 ];
             }
             
+            // Для средних экранов (планшет / большой телефон)
             if (width <= 800) {
                 return [
-                    { top: '20%', left: '4%', width: '14%', height: '20%' },
-                    { top: '18%', right: '4%', width: '15%', height: '20%' },
-                    { top: '40%', left: '40%', width: '11%', height: '15%', centered: true },
-                    { bottom: '20%', left: '6%', width: '14%', height: '17%' },
-                    { bottom: '18%', right: '6%', width: '14%', height: '15%' }
+                    { top: '18%', left: '3%', width: '14%', height: '20%' },
+                    { top: '15%', right: '3%', width: '15%', height: '20%' },
+                    { top: '38%', left: '40%', width: '12%', height: '16%', centered: true },
+                    { bottom: '18%', left: '5%', width: '14%', height: '18%' },
+                    { bottom: '15%', right: '5%', width: '14%', height: '16%' }
                 ];
             }
             
+            // Для десктопа
             return [
-                { top: '25%', left: '5%', width: '12%', height: '22%' },
-                { top: '20%', right: '5%', width: '13%', height: '22%' },
-                { top: '42%', left: '40%', width: '10%', height: '15%', centered: true },
-                { bottom: '22%', left: '7%', width: '12%', height: '17%' },
-                { bottom: '20%', right: '7%', width: '12%', height: '15%' }
+                { top: '22%', left: '5%', width: '12%', height: '20%' },
+                { top: '18%', right: '5%', width: '13%', height: '20%' },
+                { top: '40%', left: '40%', width: '10%', height: '15%', centered: true },
+                { bottom: '20%', left: '7%', width: '12%', height: '17%' },
+                { bottom: '18%', right: '7%', width: '12%', height: '15%' }
             ];
         }
 
@@ -825,9 +734,7 @@
 
         function startGame() {
             document.getElementById('start-screen').classList.add('hidden');
-            bgMusic.play().catch(error => {
-                console.log('Автовоспроизведение заблокировано браузером.');
-            });
+            bgMusic.play().catch(error => console.log('Автовоспроизведение заблокировано.'));
         }
 
         function playClickSound() {
@@ -854,24 +761,17 @@
             setTimeout(() => {
                 imgElement.src = data.newImage;
                 imgElement.alt = data.title;
-                
-                setTimeout(() => {
-                    imgElement.style.opacity = '1';
-                }, 50);
+                setTimeout(() => { imgElement.style.opacity = '1'; }, 50);
             }, 300);
 
             collectedItems.push(itemType);
             document.getElementById('count').textContent = collectedItems.length;
 
             if (collectedItems.length === totalItems) {
-                setTimeout(() => {
-                    document.getElementById('next-button').classList.add('active');
-                }, 2000);
+                setTimeout(() => { document.getElementById('next-button').classList.add('active'); }, 2000);
             }
 
-            setTimeout(() => {
-                showPoem(data.title, data.poem);
-            }, 800);
+            setTimeout(() => { showPoem(data.title, data.poem); }, 800);
         }
 
         function showPoem(title, text) {
@@ -907,9 +807,7 @@
         }
 
         document.getElementById('poem-banner').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closePoem();
-            }
+            if (e.target === this) closePoem();
         });
 
         function checkOrientation() {
@@ -925,39 +823,26 @@
             }
         }
 
-        window.addEventListener('load', checkOrientation);
+        window.addEventListener('load', () => { checkOrientation(); if (window.innerHeight <= window.innerWidth) initGame(); });
+        
         window.addEventListener('resize', function() {
             clearTimeout(window.resizeTimer);
             window.resizeTimer = setTimeout(() => {
                 checkOrientation();
-                if (window.innerHeight <= window.innerWidth) {
-                    applyPositions();
-                }
+                if (window.innerHeight <= window.innerWidth) applyPositions();
             }, 250);
         });
+        
         window.addEventListener('orientationchange', function() {
-            setTimeout(checkOrientation, 300);
             setTimeout(() => {
-                if (window.innerHeight <= window.innerWidth) {
-                    applyPositions();
-                }
-            }, 500);
+                checkOrientation();
+                if (window.innerHeight <= window.innerWidth) applyPositions();
+            }, 300);
         });
 
-        bgMusic.addEventListener('error', function() {
-            console.log('Фоновая музыка не загрузилась.');
-        });
-        clickSound.addEventListener('error', function() {
-            console.log('Звук клика не загрузился.');
-        });
-        successSound.addEventListener('error', function() {
-            console.log('Звук победы не загрузился.');
-        });
-
-        checkOrientation();
-        if (window.innerHeight <= window.innerWidth) {
-            initGame();
-        }
+        bgMusic.addEventListener('error', () => console.log('Фоновая музыка не загрузилась.'));
+        clickSound.addEventListener('error', () => console.log('Звук клика не загрузился.'));
+        successSound.addEventListener('error', () => console.log('Звук победы не загрузился.'));
     </script>
 </body>
 </html>
