@@ -606,18 +606,16 @@
 
     <div class="start-screen" id="start-screen">
         <div class="start-content">
-            <div class="start-title">🌲 Бобёр в лесу 🌲</div>
+            <div class="start-title">Дары леса</div>
             <div class="start-beaver">
                 <img src="images/png/ui/beaver-start.png" alt="Бобёр">
             </div>
             <div class="start-instruction">
-                Привет, дружок! 👋<br><br>
-                Меня зовут <b>Бобёр</b>. Я отправился в осенний лес собирать дары природы!<br><br>
-                🌲 В лесу есть <b>5 волшебных мест</b> — они <b>мерцают золотым светом</b>.<br><br>
-                👆 Нажимай на них по очереди — и ты увидишь, что там спряталось, и услышишь <b>стихи со звуком [Р]</b>!<br><br>
-                Когда соберёшь все дары — мы посмотрим, что получилось! 🧺
+                Привет, друг! Я отправился в осенний лес собирать дары природы!<br><br>
+                В лесу есть <b>5 волшебных мест</b> — найди их, нажими и прочитай стихотворение, чтобы узнать, что там спряталось! Если ты пока не читаешь сам, то повтори за взрослым. Четко произноси звук [Р].<br>
+                Все ли предметы полезны? Давай начинать!
             </div>
-            <button class="start-button" onclick="startGame()"> Начать! 🌟</button>
+            <button class="start-button" onclick="startGame()"> Начать!</button>
         </div>
     </div>
 
@@ -659,13 +657,13 @@
     <div class="poem-banner" id="poem-banner">
         <div class="poem-title" id="poem-title"></div>
         <div class="poem-text" id="poem-text"></div>
-        <button class="poem-close" onclick="closePoem()">Понятно! 👍</button>
+        <button class="poem-close" onclick="closePoem()">Дальше</button>
     </div>
 
     <button class="next-button" id="next-button" onclick="showFinalScreen()">Далее →</button>
 
     <div class="final-screen" id="final-screen">
-        <div class="final-title">🎉 Ура! Бобёр собрал дары леса! 🎉</div>
+        <div class="final-title">Ура! Бобёр собрал дары леса!</div>
         <div class="final-scene">
             <img src="images/png/ui/beaver-with-basket.png" alt="Бобёр с корзиной">
         </div>
@@ -690,7 +688,7 @@
 
         const itemsData = {
             spruce: {
-                title: ' Боровик под ёлкой',
+                title: 'Боровик под ёлкой',
                 poem: `Осенний лес такой прекрасный,
 Наряд примерил желто-красный,
 Под елью, о счастливый миг!
@@ -699,7 +697,7 @@
                 newImage: 'images/png/collected/boletus-mushroom.png'
             },
             cedar: {
-                title: ' Кедровая шишка',
+                title: 'Кедровая шишка',
                 poem: `Где-то в Сибири в тайге над рекой 
 Вырос могучий кедр вековой 
 Щедро орехами делится он 
@@ -708,7 +706,7 @@
                 newImage: 'images/png/collected/cedar-cone.png'
             },
             leaf: {
-                title: '🍄 Мухомор',
+                title: 'Мухомор',
                 poem: `Вот мухомор стоит отважно,
 Как генерал в мундире важный,
 Он не боится грибников,
@@ -717,7 +715,7 @@
                 newImage: 'images/png/collected/fly-agaric.png'
             },
             oily: {
-                title: '🐛 Червячок',
+                title: 'Червячок',
                 poem: `А вот маслята дружной стайкой
 В аренду взяли всю полянку,
 Но червячки с утра успели,
@@ -726,7 +724,7 @@
                 newImage: 'images/png/collected/worm.png'
             },
             moss: {
-                title: ' Брусника',
+                title: 'Брусника',
                 poem: `На кочках с краю у болот
 Брусника просится к вам в рот,
 А на болоте клюква спеет,
