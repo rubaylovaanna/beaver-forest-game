@@ -17,7 +17,7 @@
 
         body {
             font-family: 'Ubuntu', sans-serif;
-            overflow: hidden; /* Строго без скролла */
+            overflow: hidden;
             touch-action: manipulation;
             background: #87CEEB;
             height: 100vh;
@@ -25,7 +25,6 @@
             position: fixed;
         }
 
-        /* Предупреждение о портретной ориентации */
         .portrait-warning {
             display: none;
             position: fixed;
@@ -84,6 +83,7 @@
             background-position: center bottom;
             background-repeat: no-repeat;
             background-color: #7CB342;
+            padding-bottom: 40px; /* На десктопе оставляем отступ */
         }
 
         .beaver {
@@ -114,7 +114,6 @@
             cursor: pointer;
             z-index: 10;
             transform-origin: center center;
-            /* КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: предотвращает схлопывание картинок на мобильных */
             min-width: 40px;
             min-height: 40px;
         }
@@ -146,7 +145,7 @@
             transition: opacity 0.5s ease;
             position: relative;
             z-index: 2;
-            display: block; /* Гарантирует рендеринг */
+            display: block;
         }
 
         .spot-glow {
@@ -167,7 +166,6 @@
             50% { opacity: 1; transform: scale(1.15); }
         }
 
-        /* Плашка стиха — строго без скролла */
         .poem-banner {
             display: none;
             position: fixed;
@@ -179,12 +177,11 @@
             border-radius: 20px;
             padding: 1.5vh 3vw;
             max-width: 80vw;
-            max-height: 45vh; /* Ограничиваем высоту, но убираем скролл */
+            max-height: 45vh;
             text-align: center;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
             z-index: 1000;
             animation: bannerSlideDown 0.5s ease;
-            display: none; /* Переопределяем для flex-центрирования внутри */
             flex-direction: column;
             justify-content: center;
         }
@@ -207,7 +204,7 @@
         .poem-text {
             font-size: clamp(12px, 2.5vw, 16px);
             color: #4E342E;
-            line-height: 1.35; /* Плотнее для 4 строк */
+            line-height: 1.35;
             white-space: pre-line;
             font-style: italic;
             font-weight: 400;
@@ -278,7 +275,6 @@
             50% { transform: translateX(-50%) scale(1.05); }
         }
 
-        /* Стартовый экран — строго без скролла */
         .start-screen {
             position: fixed;
             top: 0;
@@ -309,7 +305,6 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            /* УБРАН overflow-y: auto */
         }
 
         @keyframes modalPop {
@@ -372,7 +367,6 @@
         .start-button:hover { transform: scale(1.05); }
         .start-button:active { transform: scale(0.95); }
 
-        /* Финальный экран — строго без скролла, адаптирован */
         .final-screen {
             display: none;
             position: fixed;
@@ -382,7 +376,7 @@
             height: 100%;
             background: linear-gradient(135deg, #A5D6A7 0%, #66BB6A 50%, #43A047 100%);
             z-index: 2000;
-            justify-content: space-evenly; /* Равномерное распределение по вертикали */
+            justify-content: space-evenly;
             align-items: center;
             flex-direction: column;
             padding: 1vh 2vw;
@@ -432,10 +426,9 @@
             border-radius: 20px;
             padding: 1.5vh 3vw;
             max-width: 90vw;
-            /* УБРАНЫ max-height и overflow-y: auto */
             font-size: clamp(12px, 3vw, 18px);
             color: #4E342E;
-            line-height: 1.3; /* Плотный интервал для 4 строк */
+            line-height: 1.3;
             text-align: center;
             font-style: italic;
             white-space: pre-line;
@@ -457,20 +450,27 @@
             min-height: 44px;
         }
 
-        /* ЛАНДШАФТНАЯ ОРИЕНТАЦИЯ */
         @media (orientation: landscape) {
             body, #forest-scene { overflow: hidden; }
         }
 
-        /* ПОРТРЕТНАЯ ОРИЕНТАЦИЯ */
         @media (orientation: portrait) {
             .portrait-warning { display: flex; }
             #game-container { display: none; }
         }
 
-        /* ОЧЕНЬ МАЛЕНЬКИЕ ЭКРАНЫ (высота < 400px, типичный мобильный ландшафт) */
-        @media (max-height: 400px) and (orientation: landscape) {
-            .beaver { width: 14vw; min-width: 80px; bottom: 0%; }
+        /* === МОБИЛЬНАЯ ВЕРСИЯ (ГОРИЗОНТАЛЬНАЯ) === */
+        @media (max-height: 500px) and (orientation: landscape) {
+            /* Убираем отступ снизу у сцены, чтобы бобёр мог прижаться к самому краю */
+            #forest-scene {
+                padding-bottom: 0; 
+            }
+            
+            .beaver { 
+                width: 15vw; 
+                min-width: 90px; 
+                bottom: 0; /* Строго по нижней границе экрана */
+            }
             
             .poem-banner { top: 2%; padding: 1vh 2vw; max-height: 40vh; }
             .poem-title { font-size: clamp(12px, 2.5vw, 16px); }
@@ -490,6 +490,15 @@
             .final-scene { width: clamp(90px, 20vh, 180px); height: clamp(90px, 20vh, 180px); }
             .final-poem { font-size: clamp(11px, 2.5vw, 14px); padding: 1vh 2vw; line-height: 1.25; }
             .restart-button { padding: 1vh 3vw; font-size: clamp(11px, 2.2vw, 14px); min-height: 38px; }
+        }
+
+        /* Для очень узких экранов мобильных */
+        @media (max-height: 400px) and (orientation: landscape) {
+            .beaver { 
+                width: 13vw; 
+                min-width: 80px; 
+                bottom: 0; 
+            }
         }
     </style>
 </head>
@@ -644,7 +653,6 @@
             const width = window.innerWidth;
             const height = window.innerHeight;
             
-            // Для очень маленьких экранов (мобильный ландшафт)
             if (height <= 400) {
                 return [
                     { top: '12%', left: '2%', width: '14%', height: '20%' },
@@ -655,7 +663,6 @@
                 ];
             }
             
-            // Для средних экранов (планшет / большой телефон)
             if (width <= 800) {
                 return [
                     { top: '18%', left: '3%', width: '14%', height: '20%' },
@@ -666,7 +673,6 @@
                 ];
             }
             
-            // Для десктопа
             return [
                 { top: '22%', left: '5%', width: '12%', height: '20%' },
                 { top: '18%', right: '5%', width: '13%', height: '20%' },
