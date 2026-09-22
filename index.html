@@ -83,7 +83,7 @@
             background-position: center bottom;
             background-repeat: no-repeat;
             background-color: #7CB342;
-            padding-bottom: 40px; /* На десктопе оставляем отступ */
+            padding-bottom: 40px;
         }
 
         .beaver {
@@ -459,17 +459,15 @@
             #game-container { display: none; }
         }
 
-        /* === МОБИЛЬНАЯ ВЕРСИЯ (ГОРИЗОНТАЛЬНАЯ) === */
+        /* МОБИЛЬНАЯ ВЕРСИЯ — уменьшенный бобёр */
         @media (max-height: 500px) and (orientation: landscape) {
-            /* Убираем отступ снизу у сцены, чтобы бобёр мог прижаться к самому краю */
-            #forest-scene {
-                padding-bottom: 0; 
-            }
+            #forest-scene { padding-bottom: 0; }
             
             .beaver { 
-                width: 15vw; 
-                min-width: 90px; 
-                bottom: 0; /* Строго по нижней границе экрана */
+                width: 12vw;
+                min-width: 70px;
+                max-width: 100px;
+                bottom: 0;
             }
             
             .poem-banner { top: 2%; padding: 1vh 2vw; max-height: 40vh; }
@@ -492,11 +490,11 @@
             .restart-button { padding: 1vh 3vw; font-size: clamp(11px, 2.2vw, 14px); min-height: 38px; }
         }
 
-        /* Для очень узких экранов мобильных */
         @media (max-height: 400px) and (orientation: landscape) {
             .beaver { 
-                width: 13vw; 
-                min-width: 80px; 
+                width: 10vw;
+                min-width: 60px;
+                max-width: 80px;
                 bottom: 0; 
             }
         }
@@ -521,7 +519,7 @@
 
     <div class="start-screen" id="start-screen">
         <div class="start-content">
-            <div class="start-title">🌲 Дары леса 🌲</div>
+            <div class="start-title">Дары леса</div>
             <div class="start-beaver">
                 <img src="images/png/ui/beaver-start.png" alt="Бобёр">
             </div>
@@ -530,13 +528,13 @@
                 В лесу есть <b>5 волшебных мест</b> — найди их, нажми и прочитай стихотворение, чтобы узнать, что там спряталось! Если ты пока не читаешь сам, повтори за взрослым. Четко произноси звук [Р].<br>
                 Все ли предметы полезны? Давай начинать!
             </div>
-            <button class="start-button" onclick="startGame()">🌟 Начать!</button>
+            <button class="start-button" onclick="startGame()">Начать!</button>
         </div>
     </div>
 
     <div id="game-container">
         <div id="forest-scene">
-            <div class="counter">🌟 Собрано: <span id="count">0</span>/5</div>
+            <div class="counter">Собрано: <span id="count">0</span>/5</div>
 
             <div id="spot-spruce" class="interactive-spot" onclick="collectItem('spruce')">
                 <div class="spot-glow"></div>
@@ -572,13 +570,13 @@
     <div class="poem-banner" id="poem-banner">
         <div class="poem-title" id="poem-title"></div>
         <div class="poem-text" id="poem-text"></div>
-        <button class="poem-close" onclick="closePoem()">Дальше 👍</button>
+        <button class="poem-close" onclick="closePoem()">Дальше</button>
     </div>
 
-    <button class="next-button" id="next-button" onclick="showFinalScreen()">Далее →</button>
+    <button class="next-button" id="next-button" onclick="showFinalScreen()">Далее</button>
 
     <div class="final-screen" id="final-screen">
-        <div class="final-title">🎉 Ура! Бобёр собрал дары леса! 🎉</div>
+        <div class="final-title">Ура! Бобёр собрал дары леса!</div>
         <div class="final-scene">
             <img src="images/png/ui/beaver-with-basket.png" alt="Бобёр с корзиной">
         </div>
@@ -586,7 +584,7 @@
 Раскрасил лес окраской яркой,
 Готов со всеми он делиться
 Тем, что в земле его родится</div>
-        <button class="restart-button" onclick="restartGame()">🔄 Играть снова</button>
+        <button class="restart-button" onclick="restartGame()">Играть снова</button>
     </div>
 
     <script>
@@ -603,7 +601,7 @@
 
         const itemsData = {
             spruce: {
-                title: '🍄 Боровик под ёлкой',
+                title: 'Боровик под ёлкой',
                 poem: `Осенний лес такой прекрасный,
 Наряд примерил желто-красный,
 Под елью, о счастливый миг!
@@ -612,7 +610,7 @@
                 newImage: 'images/png/collected/boletus-mushroom.png'
             },
             cedar: {
-                title: '🌰 Кедровая шишка',
+                title: 'Кедровая шишка',
                 poem: `Где-то в Сибири в тайге над рекой 
 Вырос могучий кедр вековой 
 Щедро орехами делится он 
@@ -621,7 +619,7 @@
                 newImage: 'images/png/collected/cedar-cone.png'
             },
             leaf: {
-                title: '🍄 Мухомор',
+                title: 'Мухомор',
                 poem: `Вот мухомор стоит отважно,
 Как генерал в мундире важный,
 Он не боится грибников,
@@ -630,7 +628,7 @@
                 newImage: 'images/png/collected/fly-agaric.png'
             },
             oily: {
-                title: '🐛 Червячок',
+                title: 'Червячок',
                 poem: `А вот маслята дружной стайкой
 В аренду взяли всю полянку,
 Но червячки с утра успели,
@@ -639,7 +637,7 @@
                 newImage: 'images/png/collected/worm.png'
             },
             moss: {
-                title: '🫐 Брусника',
+                title: 'Брусника',
                 poem: `На кочках с краю у болот
 Брусника просится к вам в рот,
 А на болоте клюква спеет,
@@ -729,7 +727,17 @@
             spotIds.forEach((id, index) => {
                 const element = document.getElementById(id);
                 const imgElement = element.querySelector('.spot-image');
-                imgElement.src = itemsData[itemKeys[index]].initialImage;
+                const imagePath = itemsData[itemKeys[index]].initialImage;
+                
+                imgElement.src = imagePath;
+                
+                imgElement.onerror = function() {
+                    console.error('Не удалось загрузить:', imagePath);
+                };
+                
+                imgElement.onload = function() {
+                    console.log('Загружено:', imagePath);
+                };
             });
         }
 
