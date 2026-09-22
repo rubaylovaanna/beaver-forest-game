@@ -459,14 +459,17 @@
             #game-container { display: none; }
         }
 
-        /* МОБИЛЬНАЯ ВЕРСИЯ — бобёр поднят выше */
+        /* МОБИЛЬНАЯ ВЕРСИЯ — бобёр по центру экрана */
         @media (max-height: 500px) and (orientation: landscape) {
             #forest-scene { padding-bottom: 0; }
             
             .beaver { 
                 width: 15vw; 
                 min-width: 90px; 
-                bottom: 2vh; /* Поднят на 2% высоты экрана */
+                top: 50%;
+                bottom: auto;
+                transform: translate(-50%, -50%);
+                animation: beaverBounceCenter 2.5s ease-in-out infinite;
             }
             
             .poem-banner { top: 2%; padding: 1vh 2vw; max-height: 40vh; }
@@ -493,8 +496,17 @@
             .beaver { 
                 width: 13vw; 
                 min-width: 80px; 
-                bottom: 1vh; /* Поднят на 1% высоты экрана */
+                top: 50%;
+                bottom: auto;
+                transform: translate(-50%, -50%);
+                animation: beaverBounceCenter 2.5s ease-in-out infinite;
             }
+        }
+
+        /* Анимация бобра по центру экрана для мобильных */
+        @keyframes beaverBounceCenter {
+            0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+            50% { transform: translate(-50%, -50%) translateY(-8px); }
         }
     </style>
 </head>
